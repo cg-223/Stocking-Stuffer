@@ -27,6 +27,17 @@ return {
                     '{C:inactive}Open me to find out!'
                 }
             }
+        },
+        Other = {
+            undiscovered_stocking_present = {
+                name = "Not Discovered",
+                text = {
+                    "Open this",
+                    "present in an",
+                    "unseeded run to",
+                    "learn what it does"
+                }
+            }
         }
     }
 }
