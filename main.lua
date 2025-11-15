@@ -223,7 +223,7 @@ function StockingStuffer.animate_areas()
 end
 
 function ease_alignment(area, value, hide)
-    if not hide then
+    if not hide and G[area] then
         G[area].VT.y = -4
         G[area].T.y = -4
         G.E_MANAGER:add_event(Event({
@@ -236,17 +236,19 @@ function ease_alignment(area, value, hide)
             end
         }))
     end
-    G.E_MANAGER:add_event(Event({
-        trigger = 'ease',
-        delay = 0.7,
-        blocking = false,
-        blockable = false,
-        ref_table = G[area].T,
-        ref_value = 'y',
-        ease_to = value,
-        func = (function(t) return t end)
-    }))
-    if hide then
+    if G[area] then
+        G.E_MANAGER:add_event(Event({
+            trigger = 'ease',
+            delay = 0.7,
+            blocking = false,
+            blockable = false,
+            ref_table = G[area].T,
+            ref_value = 'y',
+            ease_to = value,
+            func = (function(t) return t end)
+        }))
+    end
+    if hide and G[area] then
         G.E_MANAGER:add_event(Event({
             trigger = 'after',
             delay = 0.7,
