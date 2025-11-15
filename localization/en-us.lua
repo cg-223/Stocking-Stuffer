@@ -3,7 +3,9 @@ return {
         dictionary = {
             k_stocking_present = 'Present',
 			b_stocking_present_cards = 'Presents',
-            stocking_stuffer_gift_tag = 'From '
+            stocking_stuffer_gift_tag = 'From ',
+            stocking_stuffer_to_jokers = 'Show Jokers',
+            stocking_stuffer_to_presents = 'Show Presents',
         }
     },
     descriptions = {
@@ -14,7 +16,7 @@ return {
                 }
             },
             default_text = {
-                name = '{V:1}Standard Present',
+                name = '{V:1}Present',
                 text = {
                     '  {C:inactive}What could be inside?  ',
                     '{C:inactive}Open me to find out!'
@@ -28,16 +30,5 @@ return {
                 }
             }
         },
-        Other = {
-            undiscovered_stocking_present = {
-                name = "Not Discovered",
-                text = {
-                    "Open this",
-                    "present in an",
-                    "unseeded run to",
-                    "learn what it does"
-                }
-            }
-        }
     }
 }

@@ -17,6 +17,7 @@ local PresentDefaults = {
     },
     set = 'stocking_present',
     atlas = 'stocking_presents',
+    discovered = true,
     pos = { x = 0, y = 0 },
     loc_vars = function(self, info_queue, card)
         return { vars = { colours = { self.dev_colour } } }
@@ -112,6 +113,15 @@ SMODS.Atlas({
     py = 95
 })
 
+-- TODO: Get proper art
+SMODS.Atlas({
+    key = 'christmas_tree',
+    path = 'tree.png',
+    px = 550, py = 800,
+    atlas_table = 'ANIMATION_ATLAS',
+    frames = 8,
+})
+
 SMODS.ConsumableType({
     key = 'stocking_present',
     primary_colour = HEX("22A617"),
@@ -126,6 +136,8 @@ SMODS.ConsumableType({
 -- TODO: Christmas Tree in palce of G.HUD
 SMODS.Booster({
     key = 'stocking_present_select',
+    -- pos = {x=0, y=1},
+    atlas = 'presents',
     config = { choose = 1, extra = 3 },
     ease_background_colour = function(self)
         ease_colour(G.C.DYN_UI.MAIN, G.C.GREEN)
@@ -204,6 +216,11 @@ function Game:start_run(args)
         { card_limit = 100, type = 'stocking_stuffer_hide', highlight_limit = 1 }
     )
 
+    self.christmas_tree = UIBox{
+        definition = create_tree_hud(),
+        config = {align=('cl'), offset = {x=-7,y=0},major = G.ROOM_ATTACH}
+    }
+
     StockingStuffer.states.slot_visible = 1
     StockingStuffer.animate_areas()
 end
@@ -225,37 +242,26 @@ function StockingStuffer.animate_areas()
 end
 
 function ease_alignment(area, value, hide)
-    if not hide and G[area] then
+    if not G[area] then return end
+    if not hide then
         G[area].VT.y = -4
         G[area].T.y = -4
         G.E_MANAGER:add_event(Event({
-            trigger = 'immediate',
-            blocking = true,
-            blockable = false,
+            trigger = 'immediate', blocking = true, blockable = false,
             func = function()
                 G[area].config.type = 'joker'
                 return true
             end
         }))
     end
-    if G[area] then
+    G.E_MANAGER:add_event(Event({
+        trigger = 'ease', delay = 0.7, blocking = false, blockable = false,
+        ref_table = G[area].T, ref_value = 'y', ease_to = value,
+        func = (function(t) return t end)
+    }))
+    if hide then
         G.E_MANAGER:add_event(Event({
-            trigger = 'ease',
-            delay = 0.7,
-            blocking = false,
-            blockable = false,
-            ref_table = G[area].T,
-            ref_value = 'y',
-            ease_to = value,
-            func = (function(t) return t end)
-        }))
-    end
-    if hide and G[area] then
-        G.E_MANAGER:add_event(Event({
-            trigger = 'after',
-            delay = 0.7,
-            blocking = true,
-            blockable = false,
+            trigger = 'after', delay = 0.7, blocking = true, blockable = false,
             func = function()
                 G[area].config.type = 'stocking_stuffer_hide'
                 G[area].T.y = 0
@@ -297,13 +303,10 @@ function Game.update_shop(self, dt)
         trigger = 'after',
         func = function()
             if G.STATE_COMPLETE then
-                local card = Card(G.play.T.x + G.play.T.w / 2 - G.CARD_W * 1.27 / 2,
-                    G.play.T.y + G.play.T.h / 2 - G.CARD_H * 1.27 / 2, G.CARD_W * 1.27, G.CARD_H * 1.27, G.P_CARDS.empty,
-                    G.P_CENTERS["p_stocking_present_select"],
-                    { bypass_discovery_center = true, bypass_discovery_ui = true })
-                card.cost = 0
+                local card = SMODS.add_card({area = G.play, key = 'p_stocking_present_select', skip_materialize = true})
                 G.FUNCS.use_card({ config = { ref_table = card } })
-                card:start_materialize()
+                ease_value(G.HUD.alignment.offset, 'x', -7, nil, nil, nil, 1, 'elastic')
+                ease_value(G.christmas_tree.alignment.offset, 'x', 12, nil, nil, nil, 1, 'elastic')
                 return true
             end
         end
@@ -318,6 +321,86 @@ function Card:juice_up(scale, rot)
     stocking_stuffer_card_juice_up(self, scale, rot)
 end
 
+local explode = Card.explode
+function Card:explode(colours, time)
+    if self.config.center_key == 'p_stocking_present_select' then 
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after', delay = 1,
+            func = function()                
+                self:start_dissolve()
+                return true
+            end
+        }))
+        return
+    end
+    explode(self, colours, time)
+end
+
+function create_tree_hud()
+    local tree_sprite = AnimatedSprite(0, 0, 7, 12, G.ANIMATION_ATLAS.stocking_christmas_tree)
+
+    return {n=G.UIT.ROOT, config = {align = "cm", padding = 0.03, colour = G.C.CLEAR}, nodes={
+      {n=G.UIT.R, config = {align = "cl", padding= 0.05, colour = G.C.CLEAR, r=0.1}, nodes={
+        {n=G.UIT.O, config = {object = tree_sprite}}
+      }}
+    }}
+end
+
+local end_consum = G.FUNCS.end_consumeable
+function G.FUNCS.end_consumeable(e)
+    end_consum(e)
+    if G.booster_pack then
+        G.E_MANAGER:add_event(Event({
+            trigger = 'immediate',
+            func = function()                
+                ease_value(G.HUD.alignment.offset, 'x', 7, nil, nil, nil, nil, 'elastic')
+                ease_value(G.christmas_tree.alignment.offset, 'x', -12, nil, nil, nil, nil, 'elastic')
+                return true
+            end
+        }))
+    end
+end
+
+-- Removes skip button from present selection
+local skip_booster = G.FUNCS.can_skip_booster
+G.FUNCS.can_skip_booster = function(e)
+    if booster_obj and booster_obj.key == 'p_stocking_present_select' then
+        e.config.button = nil
+        e.config.colour = G.C.CLEAR
+        e.children[1] = nil
+        return
+    end
+    return skip_booster(e)
+end
+
+local buttons =  G.UIDEF.use_and_sell_buttons
+function G.UIDEF.use_and_sell_buttons(card)
+    if card.area and card.area == G.pack_cards and card.ability.set == 'stocking_present' then
+        return 
+        {n=G.UIT.ROOT, config = {padding = 0, colour = G.C.CLEAR}, nodes={
+                {n=G.UIT.R, config={mid = true}, nodes={
+            }},
+            {n=G.UIT.R, config={ref_table = card, r = 0.08, padding = 0.1, align = "bm", minw = 0.5*card.T.w - 0.15, minh = 0.35*card.T.h, maxw = 0.7*card.T.w - 0.15, hover = true, shadow = true, colour = card.config.center.dev_colour, one_press = true, button = 'use_card'}, nodes={
+                {n=G.UIT.T, config={text = localize('b_open'),colour = G.C.UI.TEXT_LIGHT, scale = 0.35, shadow = true}}
+            }},
+        }}
+    end
+    return buttons(card)
+end
+
+
+local can_use = G.FUNCS.can_use_consumeable
+G.FUNCS.can_use_consumeable = function(e)
+    can_use(e)
+    if e.config.ref_table.ability.set == 'stocking_present' then
+        e.config.colour = G.C.BLUE
+        e.children[1].config.text = localize('b_select')
+        if e.children[1].config.scale ~=  0.35 then
+            e.children[1].config.scale = 0.35
+            e.UIBox:recalculate()
+        end
+    end
+end
 
 -- TODO: Calculation of stocking_present area animation switching needs delay
 
