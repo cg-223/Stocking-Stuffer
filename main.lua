@@ -88,8 +88,8 @@ StockingStuffer.states = {
                         func = function()
                             local pool = get_current_pool('stocking_present_filler')
                             local key = pseudorandom_element(pool, 'stocking_present_open', {in_pool = function(v, args) return G.P_CENTERS[v] and G.P_CENTERS[v].developer == self.developer end})
+                            discover_card(G.P_CENTERS[key])
                             gift = SMODS.add_card({ area = G.gift, set = 'stocking_present_filler', key = key })
-                            discover_card(gift.config.center)
                             return true
                         end
                     }))
@@ -359,6 +359,11 @@ end
 -- Emplace Presents in Present Area (naturally)
 local stocking_stuffer_card_area_emplace = CardArea.emplace
 function CardArea:emplace(card, location, stay_flipped)
+    if self == G.consumeables and card.ability.set == "stocking_present_filler" then 
+        card:remove_from_area()
+        G.stocking_present:emplace(card, location, stay_flipped)
+        return
+    end
     if self == G.stocking_present then self:change_size(1) end
     if (self == G.jokers and StockingStuffer.states.slot_visible ~= 1) or (self == G.stocking_present and StockingStuffer.states.slot_visible ~= -1) then
         G.FUNCS.toggle_jokers_presents()
