@@ -16,7 +16,7 @@ return {
         }
     },
     descriptions = {
-        stocking_present = {
+        stocking_wrapped_present = {
             developer = {
                 text = {
                     '{s:0.5}From {V:1,s:0.5}#1#'
@@ -37,7 +37,7 @@ return {
                 }
             }
         },
-        stocking_present_filler = {
+        stocking_present = {
             default_text = {
                 name = 'Placeholder',
                 text = {

@@ -11,13 +11,13 @@ end
 
 -- TODO: Remove when finished
 for i = 1, 3 do
-    StockingStuffer.Present({
+    StockingStuffer.WrappedPresent({
         pos = { x = i % 3, y = 0 },
         developer = devs[i % #devs + 1].name,
         atlas = 'stocking_presents'
     })
     for j=1, 5-i do
-        StockingStuffer.PresentFiller({
+        StockingStuffer.Present({
             atlas = 'sack',
             key = 'filler_'..devs[i % #devs + 1].name..'-'..i..j,
             developer = devs[i % #devs + 1].name,

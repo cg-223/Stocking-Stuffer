@@ -16,7 +16,7 @@ SMODS.Atlas({
 
 
 -- Developer Template
--- Note: This object is how your Present and PresentFillers get linked
+-- Note: This object is how your WrappedPresent and Presents get linked
 StockingStuffer.Developer({
     name = display_name, -- DO NOT CHANGE
 
@@ -25,9 +25,9 @@ StockingStuffer.Developer({
     colour = HEX('000000')
 })
 
--- Present Template
+-- Wrapped Present Template
 -- key defaults to 'display_name_stocking_present'
-StockingStuffer.Present({
+StockingStuffer.WrappedPresent({
     developer = display_name, -- DO NOT CHANGE
 
     pos = { x = 0, y = 0 }, -- position of present sprite on your atlas
@@ -44,9 +44,9 @@ StockingStuffer.Present({
     -- },
 })
 
--- PresentFiller Template - Replace 'template' with your name
--- Note: You should make 5 PresentFillers to fill your Present!
-StockingStuffer.PresentFiller({
+-- Present Template - Replace 'template' with your name
+-- Note: You should make 5 Presents to fill your Present!
+StockingStuffer.Present({
     developer = display_name, -- DO NOT CHANGE
 
     key = 'filler_1', -- keys are prefixed with 'display_name_stocking_' for reference

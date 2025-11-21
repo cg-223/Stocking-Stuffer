@@ -20,7 +20,7 @@ StockingStuffer.states = {
     --#endregion
 
     --#region Present
-    StockingStuffer.Present = SMODS.Consumable:extend()
+    StockingStuffer.WrappedPresent = SMODS.Consumable:extend()
 
     -- This table contains values that all presents should have. They can be overriden for custom behaviours if necessary.
     local PresentDefaults = {
@@ -29,7 +29,7 @@ StockingStuffer.states = {
             'developer'
         },
         key = 'present',
-        set = 'stocking_present',
+        set = 'stocking_wrapped_present',
         atlas = false,
         class_prefix = false,
         discovered = true,
@@ -43,7 +43,7 @@ StockingStuffer.states = {
         end,
         pre_inject_class = function(self, func)
             for _, obj in pairs(self.obj_table) do
-                if obj.set == 'stocking_present' then
+                if obj.set == 'stocking_wrapped_present' then
                     obj.atlas = obj.atlas or 'stocking_'..StockingStuffer.Developers[obj.developer].name..'_presents'
                 end
             end
@@ -53,9 +53,9 @@ StockingStuffer.states = {
         end,
         process_loc_text = function(self)
             SMODS.process_loc_text(G.localization.descriptions[self.set], self.key,
-                G.localization.descriptions.stocking_present[self.key] or
+                G.localization.descriptions.stocking_wrapped_present[self.key] or
                 self.loc_txt or
-                G.localization.descriptions.stocking_present.default_text)
+                G.localization.descriptions.stocking_wrapped_present.default_text)
         end,
         can_use = function(self, card)
             return true
@@ -87,10 +87,10 @@ StockingStuffer.states = {
                     G.E_MANAGER:add_event(Event({
                         trigger = 'after', delay = 0.2,
                         func = function()
-                            local pool = get_current_pool('stocking_present_filler')
+                            local pool = get_current_pool('stocking_present')
                             local key = pseudorandom_element(pool, 'stocking_present_open', {in_pool = function(v, args) return G.P_CENTERS[v] and G.P_CENTERS[v].developer == self.developer end})
                             discover_card(G.P_CENTERS[key])
-                            gift = SMODS.add_card({ area = G.gift, set = 'stocking_present_filler', key = key })
+                            gift = SMODS.add_card({ area = G.gift, set = 'stocking_present', key = key })
                             return true
                         end
                     }))
@@ -123,24 +123,24 @@ StockingStuffer.states = {
 
     -- Set defaults for all Present objects
     for k, v in pairs(PresentDefaults) do
-        StockingStuffer.Present[k] = v
+        StockingStuffer.WrappedPresent[k] = v
     end
 
     --#endregion
 
-    --#region PresentFiller
+    --#region Present
 
-    StockingStuffer.PresentFiller = SMODS.Consumable:extend()
+    StockingStuffer.Present = SMODS.Consumable:extend()
 
-    -- This table contains values that all PresentFillers should have. They can be overriden for custom behaviours if necessary.
-    local PresentFillerDefaults = {
+    -- This table contains values that all Presents should have. They can be overriden for custom behaviours if necessary.
+    local PresentDefaults = {
         required_params = {
             'key',
             'developer',
         },
         atlas = false,
         class_prefix = false,
-        set = 'stocking_present_filler',
+        set = 'stocking_present',
         discovered = false,
         inject = function(self)
             self.dissolve_colours = { StockingStuffer.Developers[self.developer].colour,
@@ -151,30 +151,30 @@ StockingStuffer.states = {
         end,
         pre_inject_class = function(self, func)
             for _, obj in pairs(self.obj_table) do
-                if obj.set == 'stocking_present_filler' then
+                if obj.set == 'stocking_present' then
                     obj.atlas = obj.atlas or 'stocking_'..StockingStuffer.Developers[obj.developer].name..'_presents'
                 end
             end
         end,
         process_loc_text = function(self)
             SMODS.process_loc_text(G.localization.descriptions[self.set], self.key,
-                G.localization.descriptions.stocking_present_filler[self.key] or
+                G.localization.descriptions.stocking_present[self.key] or
                 self.loc_txt or
-                G.localization.descriptions.stocking_present_filler.default_text)
+                G.localization.descriptions.stocking_present.default_text)
         end,
         loc_vars = function(self, info_queue, card)
             return {vars = {self.key}}
         end
     }
 
-    -- Set defaults for all PresentFiller objects
-    for k, v in pairs(PresentFillerDefaults) do
-        StockingStuffer.PresentFiller[k] = v
+    -- Set defaults for all Present objects
+    for k, v in pairs(PresentDefaults) do
+        StockingStuffer.Present[k] = v
     end
 
-    -- PresentFiller ConsumableType init
+    -- Present ConsumableType init
     SMODS.ConsumableType({
-        key = 'stocking_present_filler',
+        key = 'stocking_present',
         primary_colour = HEX("22A617"),
         secondary_colour = HEX("22A617"),
         collection_rows = {6, 6, 6},
@@ -185,10 +185,10 @@ StockingStuffer.states = {
                 if not v.no_collection and (not G.ACTIVE_MOD_UI or modsCollectionTally(G.P_CENTER_POOLS[v]).of > 0) then type_buf[#type_buf + 1] = v end
             end
             local pool = {}
-            for _, present in ipairs(G.P_CENTER_POOLS.stocking_present) do
+            for _, present in ipairs(G.P_CENTER_POOLS.stocking_wrapped_present) do
                 table.insert(pool, present)
                 local count = 0
-                for _, filler in ipairs(G.P_CENTER_POOLS.stocking_present_filler) do
+                for _, filler in ipairs(G.P_CENTER_POOLS.stocking_present) do
                     if filler.developer == present.developer then
                         table.insert(pool, filler)
                         count = count + 1
@@ -217,14 +217,14 @@ StockingStuffer.states = {
         end,
         draw_hand = false,
         create_card = function(self, card, i)
-            return create_card('stocking_present', G.pack_cards, nil, nil, true, true, nil, "stocking_present")
+            return create_card('stocking_wrapped_present', G.pack_cards, nil, nil, true, true, nil, "stocking_present")
         end,
         in_pool = function() return false end
     })
 
     -- Present ConsumableType init
     SMODS.ConsumableType({
-        key = 'stocking_present',
+        key = 'stocking_wrapped_present',
         primary_colour = HEX("22A617"),
         secondary_colour = HEX("22A617"),
         shop_rate = 0,
@@ -360,7 +360,7 @@ end
 -- Emplace Presents in Present Area (naturally)
 local stocking_stuffer_card_area_emplace = CardArea.emplace
 function CardArea:emplace(card, location, stay_flipped)
-    if self == G.consumeables and card.ability.set == "stocking_present_filler" then 
+    if self == G.consumeables and card.ability.set == "stocking_present" then 
         card:remove_from_area()
         G.stocking_present:emplace(card, location, stay_flipped)
         return
@@ -403,7 +403,7 @@ end
 local smods_add_prefixes = SMODS.add_prefixes
 function SMODS.add_prefixes(cls, obj, from_take_ownership)
     smods_add_prefixes(cls, obj, from_take_ownership)
-    if cls == StockingStuffer.Present or cls == StockingStuffer.PresentFiller then
+    if cls == StockingStuffer.WrappedPresent or cls == StockingStuffer.Present then
         SMODS.modify_key(obj, StockingStuffer.Developers[obj.developer].name, nil, 'key')
     end
 end
@@ -422,7 +422,7 @@ end
 
 local buttons =  G.UIDEF.use_and_sell_buttons
 function G.UIDEF.use_and_sell_buttons(card)
-    if card.area and card.area == G.pack_cards and card.ability.set == 'stocking_present' then
+    if card.area and card.area == G.pack_cards and card.ability.set == 'stocking_wrapped_present' then
         return 
         {n=G.UIT.ROOT, config = {padding = 0, colour = G.C.CLEAR}, nodes={
                 {n=G.UIT.R, config={mid = true}, nodes={
@@ -440,17 +440,8 @@ end
 local csm = Card.start_materialize
 function Card:start_materialize(dissolve_colours, silent, timefac)
     if self.config.center_key == 'j_stocking_dummy' then dissolve_colours = {G.C.CLEAR} end
-    if self.config.center.set == 'stocking_present' or self.config.center.set == 'stocking_present_filler' then dissolve_colours = self.config.center.dissolve_colours end
+    if self.config.center.set == 'stocking_present' or self.config.center.set == 'stocking_wrapped_present' then dissolve_colours = self.config.center.dissolve_colours end
     csm(self, dissolve_colours, silent, timefac)
-end
-
--- Tallies presents used
-local tally = set_discover_tallies
-function set_discover_tallies()
-    tally()
-    G.DISCOVER_TALLIES.stocking_presents.of = G.DISCOVER_TALLIES.stocking_presents.of + G.DISCOVER_TALLIES.stocking_present_fillers.of
-    G.DISCOVER_TALLIES.stocking_presents.tally = G.DISCOVER_TALLIES.stocking_presents.tally + G.DISCOVER_TALLIES.stocking_present_fillers.tally
-
 end
 
 -- Adds developer name node to Present popups
@@ -459,7 +450,7 @@ function G.UIDEF.card_h_popup(card)
     if card.config and card.config.center and card.config.center.key == 'j_stocking_dummy' then return end
     local ret_val = stocking_stuffer_card_popup(card)
     local obj = card.config.center
-    if obj and obj.set and (obj.set == 'stocking_present' or obj.set == 'stocking_present_filler') then
+    if obj and obj.set and (obj.set == 'stocking_present' or obj.set == 'stocking_wrapped_present') then
         ret_val.nodes[1].nodes[1].nodes[1].config.colour = G.C.L_BLACK
         local tag = {
             n = G.UIT.R,
