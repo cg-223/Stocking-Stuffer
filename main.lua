@@ -142,7 +142,6 @@ StockingStuffer.states = {
         set = 'stocking_present_filler',
         discovered = false,
         inject = function(self)
-            SMODS.modify_key(self, StockingStuffer.Developers[self.developer].name, nil, 'key')
             self.dissolve_colours = { StockingStuffer.Developers[self.developer].colour,
                 darken(StockingStuffer.Developers[self.developer].colour, 0.5), lighten(StockingStuffer.Developers[self.developer].colour, 0.5),
                 darken(G.C.RED, 0.2), G.C.GREEN
@@ -402,7 +401,7 @@ end
 local smods_add_prefixes = SMODS.add_prefixes
 function SMODS.add_prefixes(cls, obj, from_take_ownership)
     smods_add_prefixes(cls, obj, from_take_ownership)
-    if cls == StockingStuffer.Present then
+    if cls == StockingStuffer.Present or cls == StockingStuffer.PresentFiller then
         SMODS.modify_key(obj, StockingStuffer.Developers[obj.developer].name, nil, 'key')
     end
 end
