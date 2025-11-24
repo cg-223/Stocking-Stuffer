@@ -179,3 +179,29 @@ local pool = SMODS.collection_pool(_pool)
 payload = '''
 if args.show_no_collection then pool = _pool end
 '''
+
+# Present order var switching
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/utils.lua"]'
+match_indent = true
+position = 'after'
+pattern = '''
+    else
+        local f = SMODS.trigger_effects(effects, _card)
+        for k,v in pairs(f) do flags[k] = v end
+        SMODS.update_context_flags(context, flags)
+    end
+    ::skip::
+end
+'''
+payload = '''
+if area == G.stocking_present then
+    if StockingStuffer.current_present_order == "before" then
+        StockingStuffer.current_present_order = "after"
+    else
+        StockingStuffer.current_present_order = "before"
+    end
+    -- print("Changed present order: " .. StockingStuffer.current_present_order)
+end
+'''

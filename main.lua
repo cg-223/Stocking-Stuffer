@@ -6,6 +6,9 @@ StockingStuffer.states = {
     slot_visible = 1
 }
 
+-- Global var to track when presents are being scored
+StockingStuffer.current_present_order = "before"
+
 --#region Objects
 
     --#region Developers
