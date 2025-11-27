@@ -2,7 +2,7 @@
 local devs = {
     { name = 'eremel_',     colour = G.C.RED },
     { name = 'theAstra',    colour = G.C.BLUE },
-    { name = 'Santa Claus', colour = G.C.GREEN },
+    -- { name = 'Santa Claus', colour = G.C.GREEN },
 }
 
 for _, v in ipairs(devs) do
@@ -10,12 +10,13 @@ for _, v in ipairs(devs) do
 end
 
 -- TODO: Remove when finished
-for i = 1, 3 do
+for i = 1, 2 do
     StockingStuffer.WrappedPresent({
         pos = { x = i % 3, y = 0 },
         developer = devs[i % #devs + 1].name,
         atlas = 'stocking_presents'
     })
+
     for j=1, 5-i do
         StockingStuffer.Present({
             atlas = 'sack',
