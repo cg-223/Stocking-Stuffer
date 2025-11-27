@@ -7,7 +7,8 @@ StockingStuffer.states = {
 }
 
 -- Global var to track when presents are being scored
-StockingStuffer.current_present_order = "before"
+StockingStuffer.first_calculation = nil
+StockingStuffer.second_calculation = true
 
 --#region Objects
 
@@ -289,6 +290,13 @@ StockingStuffer.custom_card_areas = function(game)
         game.jokers.T.w, game.jokers.T.h,
         { card_limit = 1, type = 'stocking_stuffer_hide', highlight_limit = 1 }
     )
+
+    game.stocking_flipper = CardArea(game.jokers.T.x, game.jokers.T.y - 4,
+        game.jokers.T.w, game.jokers.T.h,
+        { card_limit = 1, type = 'discard', highlight_limit = 1 })
+    
+    local c = SMODS.create_card({key = 'j_stocking_dummy', area = game.stocking_flipper})
+    game.stocking_flipper:emplace(c)
     
     game.christmas_tree = UIBox{
         definition = create_tree_hud(),
@@ -677,3 +685,18 @@ function StockingStuffer.process_loc_text()
 end
 
 --#endregion
+
+local SS_eval_card = eval_card
+function eval_card(card, context)
+    if card.area == G.stocking_flipper then
+        if StockingStuffer.first_calculation then
+            StockingStuffer.first_calculation = nil
+            StockingStuffer.second_calculation = true
+        else
+            StockingStuffer.first_calculation = true
+            StockingStuffer.second_calculation = nil
+        end
+        return {}, {}
+    end
+    return SS_eval_card(card, context)
+end
