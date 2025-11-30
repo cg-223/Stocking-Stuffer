@@ -164,7 +164,8 @@ StockingStuffer.Present({
 StockingStuffer.Present({
     developer = display_name, -- DO NOT CHANGE
     key = 'coal', -- keys are prefixed with 'display_name_stocking_' for reference
-    pos = { x = 0, y = 0 },
+    pos = { x = 6, y = 0 },
+    pixel_size = { w = 66, h = 52 },
 })
 
 
