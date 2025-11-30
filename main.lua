@@ -196,8 +196,20 @@ StockingStuffer.colours = {
                     table.insert(pool, G.P_CENTERS.j_stocking_dummy)
                 end
             end
-            return SMODS.card_collection_UIBox(pool, self.collection_rows, { back_func = #type_buf>3 and 'your_collection_consumables' or nil, show_no_collection = true,
+            local collection = SMODS.card_collection_UIBox(pool, self.collection_rows, { back_func = #type_buf>3 and 'your_collection_consumables' or nil, show_no_collection = true,
                 modify_card = function(card) card.collection_present = true end})
+
+            table.insert(collection.nodes[1].nodes[1].nodes[1].nodes[2].nodes[1].nodes,
+                {n=G.UIT.C, config = {align='cm'}, nodes = {
+                    {n=G.UIT.R, config = {colour=G.C.WHITE, padding = 0.05, emboss = 0.05, maxh = 0.6, minh = 0.6, minw = 0.6, r=0.1, align='cm'}, nodes = {
+                        {n=G.UIT.R, config = {align='cm', colour=G.C.GREEN, button = 'stocking_stuffer_help', hover = true, button_dist = 0, maxh = 0.5, minh = 0.5, minw = 0.5, r=0.1}, nodes = {
+                            {n=G.UIT.T, config={text='?', scale = 0.4, colour = G.C.WHITE, shadow = true}}
+                        }}
+                    }}
+                }}
+            )
+
+            return collection
         end,
     })
 
@@ -722,4 +734,8 @@ function eval_card(card, context)
         return {}, {}
     end
     return SS_eval_card(card, context)
+end
+
+G.FUNCS.stocking_stuffer_help = function()
+    PotatoPatchUtils.INFO_MENU.create_menu{menu_type = 'stocking_stuffer', outline_colour = G.C.RED, colour = G.C.GREEN, page_colour = G.C.GREEN, no_first_time = true, back_func = 'your_collection_stocking_presents'}
 end
