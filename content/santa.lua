@@ -62,7 +62,7 @@ StockingStuffer.Present({
 
     key = 'toy_train', -- keys are prefixed with 'display_name_stocking_' for reference
     pos = { x = 2, y = 0 },
-    config = { extra = 3 },
+    config = { extra = 10 },
 
     -- Adjusts the hitbox on the item
     pixel_size = { w = 47, h = 53 },
@@ -74,9 +74,11 @@ StockingStuffer.Present({
     end,
 
     calculate = function(self, card, context)
-        if context.joker_main then
+        if StockingStuffer.first_calculation and context.individual and context.cardarea == G.play and next(context.poker_hands["Straight"]) then
+            context.other_card.ability.perma_bonus = (context.other_card.ability.perma_bonus or 0) + card.ability.extra
             return {
-                mult = card.ability.extra,
+                message = localize('k_upgrade_ex'),
+                colour = G.C.CHIPS
             }
         end
     end
@@ -137,7 +139,7 @@ StockingStuffer.Present({
         G.E_MANAGER:add_event(Event({
             trigger = 'immediate',
             func = function()
-                SMODS.change_free_rerolls(-1)                
+                SMODS.change_free_rerolls(-1)
                 return true
             end
         }))
@@ -157,4 +159,10 @@ StockingStuffer.Present({
             }
         end
     end
+})
+
+StockingStuffer.Present({
+    developer = display_name, -- DO NOT CHANGE
+    key = 'coal', -- keys are prefixed with 'display_name_stocking_' for reference
+    pos = { x = 0, y = 0 },
 })
