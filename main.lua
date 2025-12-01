@@ -176,6 +176,7 @@ StockingStuffer.colours = {
         secondary_colour = HEX("22A617"),
         collection_rows = {6, 6, 6},
         shop_rate = 0,
+        default = 'Santa Claus_stocking_coal',
         create_UIBox_your_collection = function(self)
             local type_buf = {}
             for _, v in ipairs(SMODS.ConsumableType.visible_buffer) do
@@ -251,7 +252,8 @@ StockingStuffer.colours = {
         primary_colour = HEX("22A617"),
         secondary_colour = HEX("22A617"),
         shop_rate = 0,
-        no_collection = true
+        no_collection = true,
+        default = 'Santa Claus_stocking_present',
     })
 
     -- Dummy object for Collection organization
