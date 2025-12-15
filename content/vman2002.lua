@@ -176,16 +176,16 @@ local kittyseal = SMODS.Seal{
 		then
 			if scoredCards(context, card) then
 				local candidates = {}
-				print("Kittyseal calculate")
+				--print("Kittyseal calculate")
 				for k,v in pairs(context.poker_hands[context.scoring_name][1]) do
-					print("See card")
+					--print("See card")
 					if v.config.center.set ~= "Enhanced" then
-						print("Add candidate")
+						--print("Add candidate")
 						candidates[#candidates + 1] = v
 					end
 				end
-				if #candidates == 0 then return print("Kitty seal no candidates") end
-				print("Kitty seal success")
+				if #candidates == 0 then return --[[ print("Kitty seal no candidates") ]] end
+				--print("Kitty seal success")
 				local target = candidates[math.random(#candidates)]
 				target:set_ability(G.P_CENTERS[card.config.center.key], nil, true)
 				target:juice_up()
@@ -193,7 +193,7 @@ local kittyseal = SMODS.Seal{
 					message = localize("vman_2002_kittyseal_enhance")
 				}
 			end
-			print("Didnt find the kittyseal card")
+			--print("Didnt find the kittyseal card")
 		end
 	end
 }
@@ -231,7 +231,7 @@ StockingStuffer.Present({
 				end
 			end
 			if target then
-				print("Kitty stickers target found")
+				--print("Kitty stickers target found")
 				card.ability.extra.count = card.ability.extra.count - 1
 				return {message = localize("vman_2002_stickers_addseal"), func = function()
 					target:set_seal("stocking_VMan_2002_kittyseal")
@@ -240,7 +240,7 @@ StockingStuffer.Present({
 					end
 				end}
 			else
-				print("Kitty stickers no target")
+				--print("Kitty stickers no target")
 			end
         end
     end
@@ -269,12 +269,12 @@ StockingStuffer.Present({
         for k,v in ipairs(G.hand.cards) do
 			if v.highlighted then
 				if rank then
-					print("Pen rank "..tostring(rank))
+					--print("Pen rank "..tostring(rank))
 					rank = vman.ranks[vman.ranks[rank] + 1] or "2"
                     suit_prefix = string.sub(v.base.suit, 1, 1)..'_'
 					v:set_base(G.P_CARDS[suit_prefix..rank])
 				else
-					print("Picked first")
+					--print("Picked first")
 					rank = vman.ranks[v.base.id]
 				end
 			end

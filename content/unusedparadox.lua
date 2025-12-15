@@ -156,7 +156,7 @@ StockingStuffer.Present({
     end,
     calculate = function(self, card, context)
         if context.joker_main and StockingStuffer.first_calculation and card.ability.extra.active then
-            print("beans")
+            --print("beans")
             return {mult = card.ability.extra.mult}
         elseif context.after and StockingStuffer.first_calculation then
             if card.ability.extra.active then
@@ -208,7 +208,6 @@ StockingStuffer.Present({
     update = function(self, card, dt)
         if G.STAGE == G.STAGES.RUN and G.STATES.SMODS_BOOSTER_OPENED ~= G.STATE and card.ability.extra.items_left > 0 then
             local couponed = false
-            print("coupon")
             for _, area in ipairs({G.shop_booster.cards, G.shop_jokers.cards}) do
                 for _, v in ipairs(area) do
                     if not v.ability.couponed then

@@ -156,5 +156,6 @@ StockingStuffer.Present({
                 extra = { swap = true }
             }
         end
-    end
+    end,
+    pixel_size = { w = 41, h = 34 }
 })

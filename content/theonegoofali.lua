@@ -45,7 +45,7 @@ StockingStuffer.Present({
 		and not context.end_of_round and not context.repetition and not context.repetition_only and not context.other_card.debuff then
 			local xmult = {}
 			for k, v in ipairs(context.scoring_hand) do
-				print(k, v)
+				--print(k, v)
 				if v and SMODS.pseudorandom_probability(card, "theuglysweaterhours"..k, 1, card.ability.extra.hxmultodds, 'mspaintsweater') then
 					table.insert(xmult, { xmult = card.ability.extra.hxmult, juice_card = v, message_card = context.other_card })
 				end

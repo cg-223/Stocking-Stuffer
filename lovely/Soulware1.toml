@@ -20,7 +20,7 @@ if next(SMODS.find_card("Soulware1_stocking_stack_overflow")) and not eval.preve
 	eval.repetitions = eval.repetitions*stack_overflows
     eval.prevent_repetition = true
 end
-print(eval.repetitions) 
+--print(eval.repetitions) 
 '''
 match_indent = true
 times = 1
