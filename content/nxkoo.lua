@@ -76,7 +76,7 @@ StockingStuffer.Developer({
 
 StockingStuffer.WrappedPresent({
     developer = display_name, -- DO NOT CHANGE
-    artist = { "missingnumber" },
+    artist = { "MissingNumber" },
     coder = { "Nxkoo" },
     pos = { x = 0, y = 0 },
 })
@@ -86,7 +86,7 @@ StockingStuffer.Present({
     key = 'gun',
     pos = { x = 1, y = 0 },
     config = { extra = { odds = 4 } },
-    artist = { "missingnumber" },
+    artist = { "MissingNumber" },
     coder = { "notmario" },
     blueprint_compat = false,
     loc_vars = function(self, info_queue, card)
@@ -130,7 +130,7 @@ StockingStuffer.Present({
     developer = display_name,
     key = 'numerosloppen',
     pos = { x = 2, y = 0 },
-    artist = { "missingnumber" },
+    artist = { "MissingNumber" },
     coder = { "Nxkoo" },
     blueprint_compat = false,
     config = {},
@@ -209,7 +209,7 @@ StockingStuffer.Present({
     developer = display_name,
     key = 'ps5',
     pos = { x = 6, y = 0 },
-    artist = { "missingno" },
+    artist = { "MissingNumber" },
     coder = { "Nxkoo" },
     config = { extra = { percent = -50 } },
     blueprint_compat = false,
