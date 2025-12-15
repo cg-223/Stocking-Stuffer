@@ -168,7 +168,7 @@ StockingStuffer.Present({
     developer = display_name,
     key = 'monstercan',
     pos = { x = 3, y = 0 },
-    artist = { "lord.ruby" },
+    artist = { "Ruby" },
     coder = { "Nxkoo" },
     blueprint_compat = false,
     use = function(self, card)
@@ -195,7 +195,7 @@ StockingStuffer.Present({                       -- QQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
     developer = display_name,                   -- QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
     key = 'dealmaker',                          -- QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
     pos = { x = 4, y = 0 },                     -- QQQQQQQQQQQQQQQQQQQWQQQQQWWWBBBHHHHHHHHHBWWWQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ
-    artist = { "lord.ruby" },                   -- QQQQQQQQQQQQQQQQD!`__ssaaaaaaaaaass_ass_s____.  -~""??9VWQQQQQQQQQQQQQQQQQQQ
+    artist = { "Ruby" },                   -- QQQQQQQQQQQQQQQQD!`__ssaaaaaaaaaass_ass_s____.  -~""??9VWQQQQQQQQQQQQQQQQQQQ
     coder = { "Nxkoo" },                        -- QQQQQQQQQQQQQQP'_wmQQQWWBWV?GwwwmmWQmwwwwwgmZUVVHAqwaaaac,"?9$QQQQQQQQQQQQQQ
     blueprint_compat = false,                   -- QQQQQQQQQQQW! aQWQQQQW?qw#TTSgwawwggywawwpY?T?TYTYTXmwwgZ$ma/-?4QQQQQQQQQQQ
     loc_vars = function(self, info_queue, card) -- QQQQQQQQQQQW' jQQQQWTqwDYauT9mmwwawww?WWWWQQQQQ@TT?TVTT9HQQQQQQw,-4QQQQQQQQQ
