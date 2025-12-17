@@ -7,9 +7,19 @@ return {
         dictionary = {
             k_stocking_present = 'Present',
             k_stocking_wrapped_present = 'Wrapped Present',
+            b_stocking_animate_areas = 'Card Area Animation Behavior',
             b_stocking_custom_menu = "Enable Custom Menu",
+            b_stocking_switch_on_trigger = "Switch Card Areas on Trigger",
 			b_stocking_present_cards = 'Presents',
             b_stocking_wrapped_present_cards = 'Presents',
+            stocking_animate_areas_desc = {
+                'Choose how area swapping',
+                'animations should behave'
+            },
+            stocking_animate_areas_options = {
+                "Ease",
+                "Instant"
+            },
             stocking_stuffer_gift_tag = 'From ',
             stocking_stuffer_to_jokers = 'Show Jokers',
             stocking_stuffer_to_presents = 'Show Presents',

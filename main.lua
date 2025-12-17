@@ -37,7 +37,7 @@ StockingStuffer.config_tab = function()
             -- Custom Menu Toggle
             {
                 n = G.UIT.R,
-                config = { align = "cl", padding = 0 },
+                config = { align = "cm", padding = 0 },
                 nodes = {
                     {
                         n = G.UIT.C,
@@ -53,11 +53,64 @@ StockingStuffer.config_tab = function()
                             { n = G.UIT.T, config = { text = localize('b_stocking_custom_menu'), scale = 0.45, colour = G.C.UI.TEXT_LIGHT } },
                         }
                     },
-                }
+                },
+            },
+
+            -- Switch Areas on Trigger Toggle
+            {
+                n = G.UIT.R,
+                config = { align = "cm", padding = 0 },
+                nodes = {
+                    {
+                        n = G.UIT.C,
+                        config = { align = "cl", padding = 0.05 },
+                        nodes = {
+                            create_toggle { col = true, label = "", scale = 1, w = 0, shadow = true, ref_table = StockingStuffer.config, ref_value = "switch_on_trigger" },
+                        }
+                    },
+                    {
+                        n = G.UIT.C,
+                        config = { align = "c", padding = 0 },
+                        nodes = {
+                            { n = G.UIT.T, config = { text = localize('b_stocking_switch_on_trigger'), scale = 0.45, colour = G.C.UI.TEXT_LIGHT } },
+                        }
+                    },
+                },
+            },
+
+            -- Card Area Animation Behavior Cycle
+            {
+                n = G.UIT.R,
+                config = { align = "cm", padding = 0 },
+                nodes = {
+                    {     -- Animate Areas cycle
+                        n = G.UIT.C,
+                        config = { align = "cm", padding = 0.1 },
+                        nodes = {
+                            create_option_cycle({
+                                label = localize('b_stocking_animate_areas'),
+                                current_option = StockingStuffer.config.animate_areas,
+                                options = localize('stocking_animate_areas_options'),
+                                ref_table = StockingStuffer.config,
+                                ref_value = 'animate_areas',
+                                info = localize('stocking_animate_areas_desc'),
+                                colour = G.C.RED,
+                                opt_callback = 'stocking_cycle_update'
+                            })
+                        }
+                    },
+                },
             },
 
         }
     }
+end
+
+G.FUNCS.stocking_cycle_update = function(args)
+    args = args or {}
+    if args.cycle_config and args.cycle_config.ref_table and args.cycle_config.ref_value then
+        args.cycle_config.ref_table[args.cycle_config.ref_value] = args.to_key
+    end
 end
 --#endregion
 
@@ -495,11 +548,11 @@ end
 function StockingStuffer.animate_areas()
     StockingStuffer.states.areas_moving = true
     if StockingStuffer.states.slot_visible == -1 then
-        ease_alignment('jokers', -4, true)
-        ease_alignment('stocking_present', 0)
+        ease_alignment('jokers', -4, true, StockingStuffer.config.animate_areas == 2)
+        ease_alignment('stocking_present', 0, nil, StockingStuffer.config.animate_areas == 2)
     else
-        ease_alignment('stocking_present', -4, true)
-        ease_alignment('jokers', 0)
+        ease_alignment('stocking_present', -4, true, StockingStuffer.config.animate_areas == 2)
+        ease_alignment('jokers', 0, nil, StockingStuffer.config.animate_areas == 2)
     end
     G.E_MANAGER:add_event(Event({
         func = function()
@@ -510,33 +563,45 @@ function StockingStuffer.animate_areas()
 end
 
 -- Joker/Present Area Easing
-function ease_alignment(area, value, hide)
+function ease_alignment(area, value, hide, instant)
     if not G[area] then return end
-    if not hide then
-        G[area].VT.y = -4
-        G[area].T.y = -4
+    if instant then
         G.E_MANAGER:add_event(Event({
             trigger = 'immediate', blocking = true, blockable = false,
             func = function()
-                G[area].config.type = 'joker'
-                return true
+                G[area].T.y = value
+                G[area].VT.y = value
+                G[area].config.type = hide and 'stocking_stuffer_hide' or 'joker'
+                return true;
             end
         }))
-    end
-    G.E_MANAGER:add_event(Event({
-        trigger = 'ease', delay = 0.7, blocking = false, blockable = false,
-        ref_table = G[area].T, ref_value = 'y', ease_to = value,
-        func = (function(t) return t end)
-    }))
-    if hide then
-        G.E_MANAGER:add_event(Event({
-            trigger = 'after', delay = 0.7, blocking = true, blockable = false,
-            func = function()
-                G[area].config.type = 'stocking_stuffer_hide'
-                G[area].T.y = 0
-                return true
-            end
-        }))
+    else
+        if not hide then
+            G[area].VT.y = -4
+            G[area].T.y = -4
+            G.E_MANAGER:add_event(Event({
+                trigger = 'immediate', blocking = true, blockable = false,
+                func = function()
+                    G[area].config.type = 'joker'
+                    return true
+                end
+            }))
+        end
+            G.E_MANAGER:add_event(Event({
+                trigger = 'ease', delay = 0.7, blocking = false, blockable = false,
+                ref_table = G[area].T, ref_value = 'y', ease_to = value,
+                func = (function(t) return t end)
+            }))
+        if hide then
+            G.E_MANAGER:add_event(Event({
+                trigger = 'after', delay = 0.7, blocking = true, blockable = false,
+                func = function()
+                    G[area].config.type = 'stocking_stuffer_hide'
+                    G[area].T.y = 0
+                    return true
+                end
+            }))
+        end
     end
 end
 
@@ -704,7 +769,7 @@ end
 -- Toggles Present and Joker areas depending on what cards are being juiced
 local stocking_stuffer_card_juice_up = Card.juice_up
 function Card:juice_up(scale, rot)
-    if self.area and not self.ability.no_stocking and not self.states.hover.is and ((self.area == G.jokers and StockingStuffer.states.slot_visible ~= 1) or (self.area == G.stocking_present and StockingStuffer.states.slot_visible ~= -1)) and not self.juicing_until then
+    if self.area and not self.ability.no_stocking and not self.states.hover.is and ((self.area == G.jokers and StockingStuffer.states.slot_visible ~= 1) or (self.area == G.stocking_present and StockingStuffer.states.slot_visible ~= -1)) and not self.juicing_until and StockingStuffer.config.switch_on_trigger then
         G.FUNCS.toggle_jokers_presents()
         for i=1, 2 do
             G.E_MANAGER:add_event(Event({
@@ -720,7 +785,7 @@ end
 
 local stocking_stuffer_card_start_dissolve = Card.start_dissolve
 function Card:start_dissolve(...)
-    if self.area and not self.ability.no_stocking and not self.states.hover.is and ((self.area == G.jokers and StockingStuffer.states.slot_visible ~= 1) or (self.area == G.stocking_present and StockingStuffer.states.slot_visible ~= -1)) then
+    if self.area and not self.ability.no_stocking and not self.states.hover.is and ((self.area == G.jokers and StockingStuffer.states.slot_visible ~= 1) or (self.area == G.stocking_present and StockingStuffer.states.slot_visible ~= -1)) and StockingStuffer.config.switch_on_trigger then
         G.FUNCS.toggle_jokers_presents()
         for i=1, 2 do
             G.E_MANAGER:add_event(Event({
@@ -739,7 +804,7 @@ function card_eval_status_text(card, ...)
     G.E_MANAGER:add_event(Event({
         trigger = 'immediate',
         func = function()  
-            if (card.area == G.jokers and StockingStuffer.states.slot_visible ~= 1) or (card.area == G.stocking_present and StockingStuffer.states.slot_visible ~= -1) then
+            if ((card.area == G.jokers and StockingStuffer.states.slot_visible ~= 1) or (card.area == G.stocking_present and StockingStuffer.states.slot_visible ~= -1)) and StockingStuffer.config.switch_on_trigger then
                 G.FUNCS.toggle_jokers_presents()
                 for i=1, 2 do
                     G.E_MANAGER:add_event(Event({
