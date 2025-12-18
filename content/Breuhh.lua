@@ -150,7 +150,7 @@ StockingStuffer.Present({
                 end
             end
 
-            if StockingStuffer.second_calculation then
+            if StockingStuffer.second_calculation and card.ability.extra.count > 0 then
                 return {chips = card.ability.chipsmul * card.ability.count}
             end
         end
