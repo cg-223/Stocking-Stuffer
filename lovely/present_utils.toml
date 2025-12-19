@@ -148,27 +148,6 @@ table.insert(t, 1, G.stocking_present)
 table.insert(t, 1, G.stocking_flipper)
 '''
 
-# CardArea initialization (included in smods dev)
-[[patches]]
-[patches.pattern]
-target = 'game.lua'
-match_indent = true
-position = 'after'
-pattern = '''
-G.playing_cards = {}
-
-set_screen_positions()
-'''
-payload = '''
-if V(SMODS.version) < V('1.0.0~BETA-1117b') then
-    for _, mod in ipairs(SMODS.mod_list) do
-        if mod.can_load and mod.custom_card_areas and type(mod.custom_card_areas) == "function" then
-            mod.custom_card_areas(self)
-        end
-    end
-end
-'''
-
 # Allow for dummy joker in collection
 [[patches]]
 [patches.pattern]
