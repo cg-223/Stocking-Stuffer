@@ -65,3 +65,13 @@ Participants were tasked with creating up to 5 Presents for players to unwrap fr
 - Spikeberd (a.k.a Lyman)
 - DigitalDetective47
 - Lily Felli
+### Bugfixing, Playtesting, and Polish
+- Edward Robinson
+- ThunderEdge
+- Nxkoo
+- SDM_0
+- triple6lexi
+- pi_cubed
+- theAstra
+- Eremel
+- WilsontheWolf
