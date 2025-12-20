@@ -70,7 +70,7 @@ StockingStuffer.Present({
         }
     },
     can_use = function(self, card)
-        return G.GAME.dollars > card.ability.extra.rerollprice
+        return to_big(G.GAME.dollars) > to_big(card.ability.extra.rerollprice)
     end,
 	loc_vars = function(self, info_queue, card)
 		local hpt = card.ability.extra
