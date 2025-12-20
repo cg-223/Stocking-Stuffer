@@ -343,7 +343,7 @@ StockingStuffer.Present({
         if card.ability.extra.state == 1 then
             return G.hand and #G.hand.highlighted > 0 and #G.hand.highlighted <= card.ability.extra.highlight
         else
-            return card.ability.extra.money <= G.GAME.dollars - G.GAME.bankrupt_at
+            return to_big(card.ability.extra.money) <= to_big(G.GAME.dollars - G.GAME.bankrupt_at)
         end
     end,
 })
