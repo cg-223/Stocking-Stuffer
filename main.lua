@@ -4,6 +4,13 @@ assert(SMODS.load_file('PotatoPatchUtils/info_menu.lua'))()
 assert(SMODS.load_file('PotatoPatchUtils/credits.lua'))()
 PotatoPatchUtils.LOC.init()
 
+to_big = to_big or function(x)
+    return x
+end
+to_number = to_number or function(x) 
+    return x
+end
+
 SMODS.Atlas{
     key = "modicon",
     path = "modicon.png",

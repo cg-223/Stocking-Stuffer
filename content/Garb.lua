@@ -25,10 +25,10 @@ StockingStuffer.Developer({
 
 local easedollars_ref = ease_dollars
 function ease_dollars(mod, instant)
-    if mod > 0 and next(SMODS.find_card('Garb_stocking_lucky_star')) then
-        mod = math.floor(mod * 1.25)
-    elseif mod < 0 and next(SMODS.find_card('Garb_stocking_horrible')) then
-        mod = math.min(math.floor(mod * 1.25), G.GAME.dollars)
+    if to_big(mod) > to_big(0) and next(SMODS.find_card('Garb_stocking_lucky_star')) then
+        mod = math.floor(to_number(mod) * 1.25)
+    elseif to_big(mod) < to_big(0) and next(SMODS.find_card('Garb_stocking_horrible')) then
+        mod = math.min(math.floor(to_number(mod) * 1.25), to_number(G.GAME.dollars))
     end
     easedollars_ref(mod, instant)
 end
