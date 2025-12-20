@@ -167,7 +167,7 @@ StockingStuffer.Present({
     create_buttons = function(self, card)
         if card.highlighted then
             for ability, visible in pairs(card.ability.extra.used) do
-                if G.GAME.dollars < card.ability.extra.cost then visible = true end
+                if to_big(G.GAME.dollars) < to_big(card.ability.extra.cost) then visible = true end
                 local button = {n=G.UIT.ROOT, config = {colour = G.C.CLEAR}, nodes ={
                     {n=G.UIT.C, config = { ref_table = card, minw = 0.7, maxw = 0.7, padding = 0.05, align = 'bm', colour = G.C.CLEAR,
                         shadow = true, r = 0.2, minh = 0.7, one_press = true, label = ability, ease_on_hover = true, button = not visible and 'gappie_power_up_jar'}, nodes = {
@@ -536,7 +536,7 @@ StockingStuffer.Present({
     create_buttons = function(self, card)
         if card.highlighted and not card.ability.extra.evolved then
             for evolution, cost in pairs(card.ability.extra.options) do
-                local buy = G.GAME.dollars > cost
+                local buy = to_big(G.GAME.dollars) > to_big(cost)
                 local button = {n=G.UIT.ROOT, config = {colour = G.C.CLEAR}, nodes ={
                     {n=G.UIT.C, config = { ref_table = card, minw = 0.7, maxw = 0.7, padding = 0.05, align = 'bm', colour = G.C.CLEAR,
                         shadow = true, r = 0.2, minh = 0.7, one_press = true, label = evolution, ease_on_hover = true, button = buy and 'gappie_evolve_shroom' }, nodes = {
