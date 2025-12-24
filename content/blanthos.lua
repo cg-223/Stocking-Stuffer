@@ -154,7 +154,7 @@ SMODS.Scoring_Calculation {
     parameters = { 'mult', 'chips', 'stocking_jolly_glop' },
     func = function(self, chips, mult, flames)
         local jolly_glop = SMODS.get_scoring_parameter('stocking_jolly_glop', flames)
-        return chips * mult * (type(jolly_glop) == 'number' and jolly_glop or 1)
+        return chips * mult * jolly_glop
     end,
     -- borrowed ui from potassium remake because deadline battle advanced not enough time to learn how to ui
     replace_ui = function(self) --[[@overload fun(self): table]]
