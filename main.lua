@@ -48,7 +48,7 @@ StockingStuffer.description_loc_vars = function()
         local str = 'Placeholder'
         while str == 'Placeholder' do
             local pres = pseudorandom_element(G.P_CENTER_POOLS.stocking_present)
-            str = localize({type='name_text', set='stocking_present', key=pres.key, vars=pres.loc_vars and (pres:loc_vars({}, pres:create_fake_card()) or {}).vars})
+            str = localize({type='name_text', set='stocking_present', key=pres.key})
         end
         key[i] = str
     end
