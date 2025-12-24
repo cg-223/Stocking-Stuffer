@@ -216,23 +216,27 @@ StockingStuffer.Present({
     developer = display_name, -- DO NOT CHANGE
     key = 'slime',            -- keys are prefixed with 'display_name_stocking_' for reference
     pos = { x = 3, y = 0 },
-    config = { extra = 0.1 },
+    config = { extra = { glop = 0.1, last_scoring_parameter = '' } },
     -- Adjusts the hitbox on the item
     pixel_size = { w = 38, h = 37 },
     -- Adjusts the scale (it's too small by default)
     display_size = { w = 38 * 1.5, h = 37 * 1.5 },
     loc_vars = function(self, info_queue, card)
         return {
-            vars = { card.ability.extra },
+            vars = { card.ability.extra.glop },
         }
     end,
     add_to_deck = function(self, card, from_debuff)
+        card.ability.extra.last_scoring_parameter = G.GAME.current_scoring_calculation.key
         SMODS.set_scoring_calculation('stocking_jolly_glop')
+    end,
+    remove_from_deck = function(self, card, from_debuff)
+        SMODS.set_scoring_calculation(card.ability.extra.last_scoring_parameter)
     end,
     calculate = function(self, card, context)
         if context.individual and context.cardarea == G.play and StockingStuffer.second_calculation then
             return {
-                jolly_glop = card.ability.extra
+                jolly_glop = card.ability.extra.glop
 
             }
         end
