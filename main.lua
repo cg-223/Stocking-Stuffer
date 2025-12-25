@@ -1413,7 +1413,7 @@ end
 local ea = ease_ante
 function ease_ante(mod)
     ea(mod)
-    G.GAME.stocking_last_pack = G.GAME.stocking_last_pack + mod
+    G.GAME.stocking_last_pack = G.GAME.round_resets.ante
 end
 
 --#endregion
