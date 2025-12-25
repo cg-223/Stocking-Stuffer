@@ -262,7 +262,8 @@ StockingStuffer.Present({ --mysterious object (the wand, upside down)
     config = {
         extra = {
             ready = false,
-            type = "none"
+            type = "none",
+            odds = 4
         },
         admire = {
             chips = 39,
@@ -312,7 +313,7 @@ StockingStuffer.Present({ --mysterious object (the wand, upside down)
     calculate = function(self, card, context)
         if not (card.ability.extra.ready) and context.joker_main then
             local message = StockingStuffer.second_calculation and localize("mintymas_hmm"..math.random(1,5)) or nil
-            if SMODS.pseudorandom_probability(card, "mintymas_wand_thoughts", 1, 4) then
+            if SMODS.pseudorandom_probability(card, "mintymas_wand_thoughts", 1, card.ability.extra.odds) then
                 local possiblies = {
                     "trade", "dismantle", "admire"
                 }
