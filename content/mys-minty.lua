@@ -60,9 +60,7 @@ StockingStuffer.Present({ --cute little jingle ball
         return true
     end,
     use = function(self, card, area, copier)
-        return {
-            message = localize("mintymas_whee")
-        }
+        SMODS.calculate_effect({ message = localize("mintymas_whee")},card)
     end,
     keep_on_use = function(self, card)
         return true
